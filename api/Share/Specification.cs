@@ -1,10 +1,16 @@
 using System.Linq.Expressions;
+using Ecommerce.Share.Model;
 
 namespace Ecommerce.Share.Specification;
 
-public interface ISpecification<TEntity> where TEntity : class
+public interface IPredicateSpecification<TEntity> where TEntity : class
 {
-    Expression<Func<TEntity, bool>>? ToPredicate(CriteriaBuilder<TEntity> builder);
+    Expression<Func<TEntity, bool>>? ToPredicate(PredicateBuilder<TEntity> builder);
+}
+
+public interface IIncludeSpecification<TEntity> where TEntity : class
+{
+    Expression<Func<TEntity, object>> IncludeProperty();
 }
 
 public enum SortDirection
@@ -13,15 +19,15 @@ public enum SortDirection
     DESC = 2
 }
 
-public class Sort<TEntity, TKey> where TEntity : class
+public class Sort<TEntity> where TEntity : class
 {
-    public Expression<Func<TEntity, TKey>> By { get; init; }
-    public SortDirection Direction { get; init; }
+    public Expression<Func<TEntity, object>> SortExpression { get; private set; }
+    public SortDirection Direction { get; private set; }
 
-    public Sort(Expression<Func<TEntity, TKey>> by)
+    public Sort(Expression<Func<TEntity, object>> sortExpression, SortDirection direction = SortDirection.ASC)
     {
-        By = by;
-        Direction = SortDirection.ASC;
+        SortExpression = sortExpression;
+        Direction = direction;
     }
 }
 

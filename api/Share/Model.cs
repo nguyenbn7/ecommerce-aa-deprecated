@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using System.Text.Json.Serialization;
 
 namespace Ecommerce.Share.Model;
@@ -68,5 +69,60 @@ public class Pageable
             Index = pageIndex < 0 ? 0 : pageIndex,
             Size = pageSize < 1 ? 6 : pageSize
         };
+    }
+}
+
+public class PredicateBuilder<TEntity>
+{
+    public Predicate<TEntity> Construct(Expression<Func<TEntity, bool>>? criteria = null)
+    {
+        return new Predicate<TEntity>(criteria);
+    }
+}
+
+public class Predicate<TEntity>
+{
+    private Expression<Func<TEntity, bool>>? predicateExpression = null;
+
+    public Predicate(Expression<Func<TEntity, bool>>? predicateExpression)
+    {
+        this.predicateExpression = predicateExpression;
+    }
+
+    public Predicate<TEntity> And(Expression<Func<TEntity, bool>> predicateExpression)
+    {
+        if (this.predicateExpression != null)
+            this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(
+                Expression.Add(this.predicateExpression.Body, predicateExpression.Body)
+            );
+        else
+            this.predicateExpression = predicateExpression;
+        return this;
+    }
+
+    public Predicate<TEntity> Or(Expression<Func<TEntity, bool>> predicateExpression)
+    {
+        if (this.predicateExpression != null)
+            this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(
+                Expression.Or(this.predicateExpression.Body, predicateExpression.Body)
+            );
+        else
+            this.predicateExpression = predicateExpression;
+        return this;
+    }
+
+    public Predicate<TEntity> Not(Expression<Func<TEntity, bool>> predicateExpression)
+    {
+        if (this.predicateExpression != null)
+            this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(Expression.Not(this.predicateExpression));
+        else
+            this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(Expression.Not(predicateExpression));
+        return this;
+    }
+
+
+    public Expression<Func<TEntity, bool>>? ToPredicate()
+    {
+        return predicateExpression;
     }
 }
