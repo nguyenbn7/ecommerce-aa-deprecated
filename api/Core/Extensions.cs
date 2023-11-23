@@ -1,8 +1,8 @@
 using Ecommerce.API.Baskets;
-using Ecommerce.API.Products;
 using Ecommerce.Core.Middleware;
 using Ecommerce.Share.GenericRepository;
 using Ecommerce.Share.Service;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 
@@ -12,7 +12,7 @@ public static class ServicesExtensions
 {
     public static IServiceCollection AddCustomServices(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IProductRepository), typeof(Repository<Product, int>));
+        services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
         services.AddScoped<IBasketRepository, BasketRepository>();
 
         services.AddScoped<ITokenService, TokenService>();
@@ -37,6 +37,16 @@ public static class ServicesExtensions
             return ConnectionMultiplexer.Connect(options);
         });
 
+        return services;
+    }
+
+    public static IServiceCollection AddAppDbContext(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddDbContext<StoreContext>(options =>
+        {
+            options.UseNpgsql(configuration.GetConnectionString("DevelopmentConn"));
+        });
+        services.AddScoped<DbContext, StoreContext>();
         return services;
     }
 

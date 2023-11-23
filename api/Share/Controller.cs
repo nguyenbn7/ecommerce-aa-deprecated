@@ -4,5 +4,10 @@ namespace Ecommerce.Share.Controller;
 [Route("api/[controller]")]
 public abstract class BaseAPIController : ControllerBase
 {
-    
+    private readonly ILogger logger;
+
+    protected BaseAPIController(ILogger logger)
+    {
+        this.logger = logger;
+    }
 }

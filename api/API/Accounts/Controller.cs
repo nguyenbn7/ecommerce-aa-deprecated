@@ -17,7 +17,8 @@ public class AccountController : BaseAPIController
     private readonly ITokenService tokenService;
     private readonly IMapper mapper;
 
-    public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService, IMapper mapper)
+    public AccountController(ILogger<AccountController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService, IMapper mapper)
+        : base(logger)
     {
         this.mapper = mapper;
         this.userManager = userManager;

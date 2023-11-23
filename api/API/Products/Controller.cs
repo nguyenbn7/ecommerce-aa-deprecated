@@ -1,5 +1,6 @@
 using AutoMapper;
-using Ecommerce.Share;
+using Ecommerce.Share.Controller;
+using Ecommerce.Share.GenericRepository;
 using Ecommerce.Share.Model;
 using Ecommerce.Share.Specification;
 
@@ -7,10 +8,11 @@ namespace Ecommerce.API.Products;
 
 public class ProductsController : BaseAPIController
 {
-    private readonly IProductRepository productRepository;
+    private readonly IRepository<Product, int> productRepository;
     private readonly IMapper mapper;
 
-    public ProductsController(IProductRepository productRepository, IMapper mapper)
+    public ProductsController(ILogger<ProductsController> logger, IRepository<Product, int> productRepository, IMapper mapper)
+        : base(logger)
     {
         this.productRepository = productRepository;
         this.mapper = mapper;
