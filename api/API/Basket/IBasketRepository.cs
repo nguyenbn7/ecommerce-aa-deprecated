@@ -1,4 +1,4 @@
-namespace Ecommerce.Module.basket;
+namespace Ecommerce.API.Basket.Repository;
 
 public interface IBasketRepository
 {

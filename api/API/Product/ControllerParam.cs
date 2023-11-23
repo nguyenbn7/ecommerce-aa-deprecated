@@ -1,6 +1,6 @@
-namespace Ecommerce.Module.product;
+namespace Ecommerce.API.Product.Controller.Param;
 
-public class ProductsParams
+public class ProductsParam
 {
     private const int MaxPageSize = 50;
     private const int DefaultPageSize = 10;

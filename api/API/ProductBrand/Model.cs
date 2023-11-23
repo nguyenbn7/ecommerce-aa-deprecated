@@ -1,6 +1,6 @@
-namespace Ecommerce.Module.productType;
+namespace Ecommerce.API.ProductBrand.Model;
 
-public class ProductType
+public class ProductBrand
 {
     public int Id { get; set; }
     public required string Name { get; set; }

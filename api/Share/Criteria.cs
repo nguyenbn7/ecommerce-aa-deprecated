@@ -4,18 +4,9 @@ namespace Ecommerce.Share;
 
 public class CriteriaBuilder<TEntity>
 {
-    private Expression<Func<TEntity, bool>>? criterion = null;
-
-    public Criteria<TEntity> Construct()
+    public Criteria<TEntity> Construct(Expression<Func<TEntity, bool>>? criteria = null)
     {
-        return new Criteria<TEntity>();
-    }
-
-    public Expression<Func<TEntity, bool>> ToPredicate()
-    {
-        if (criterion == null)
-            return p => 1 == 1;
-        return criterion;
+        return new Criteria<TEntity>(criteria);
     }
 }
 
@@ -23,10 +14,9 @@ public class Criteria<TEntity>
 {
     private Expression<Func<TEntity, bool>>? criterion = null;
 
-    public Criteria<TEntity> Add(Expression<Func<TEntity, bool>> predicate)
+    public Criteria(Expression<Func<TEntity, bool>>? criteria)
     {
-        criterion = predicate;
-        return this;
+        criterion = criteria;
     }
 
     public Criteria<TEntity> And(Expression<Func<TEntity, bool>> predicate)

@@ -1,4 +1,4 @@
-using Ecommerce.Module.basket;
+using Ecommerce.API.Basket.Repository;
 using Ecommerce.Share;
 using StackExchange.Redis;
 

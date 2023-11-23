@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Ecommerce.Share;
 
-namespace Ecommerce.Module.product;
+namespace Ecommerce.API.Product.Specification;
 
-public class ProductsSpecification : ISpecification<Product>
+public class ProductsSpecification : ISpecification<Model.Product>
 {
     private readonly int? brandId;
     private readonly int? typeId;
@@ -16,12 +16,12 @@ public class ProductsSpecification : ISpecification<Product>
         this.searchTerm = searchTerm?.ToLower();
     }
 
-    public Expression<Func<Product, bool>>? ToPredicate(CriteriaBuilder<Product> builder)
+    public Expression<Func<Model.Product, bool>>? ToPredicate(CriteriaBuilder<Model.Product> builder)
     {
         var criteria = builder.Construct();
         if (brandId != null)
         {
-            criteria.Add(p => p.ProductBrandId == brandId);
+            criteria.And(p => p.ProductBrandId == brandId);
         }
 
         if (typeId != null)
@@ -38,7 +38,7 @@ public class ProductsSpecification : ISpecification<Product>
     }
 }
 
-public class ProductSpecification : ISpecification<Product>
+public class ProductSpecification : ISpecification<Model.Product>
 {
     private readonly int id;
 
@@ -47,8 +47,8 @@ public class ProductSpecification : ISpecification<Product>
         this.id = id;
     }
 
-    public Expression<Func<Product, bool>>? ToPredicate(CriteriaBuilder<Product> builder)
+    public Expression<Func<Model.Product, bool>>? ToPredicate(CriteriaBuilder<Model.Product> builder)
     {
-        return builder.Construct().Add(p => p.Id == id).ToPredicate();
+        return builder.Construct(p => p.Id == id).ToPredicate();
     }
 }
