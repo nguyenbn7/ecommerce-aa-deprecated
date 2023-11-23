@@ -1,6 +1,4 @@
 using System.Linq.Expressions;
-using Ecommerce.API.ProductBrands;
-using Ecommerce.API.ProductTypes;
 using Ecommerce.Share.Model;
 using Ecommerce.Share.Specification;
 

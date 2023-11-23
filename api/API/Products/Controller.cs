@@ -53,7 +53,7 @@ public class ProductsController : BaseAPIController
 
         return new Page<ProductDTO>
         {
-            PageIndex = pageProduct.PageIndex,
+            PageIndex = pageProduct.PageIndex + 1,
             PageSize = pageProduct.PageSize,
             TotalItems = pageProduct.TotalItems,
             Data = mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductDTO>>(pageProduct.Data)

@@ -92,9 +92,15 @@ public class Predicate<TEntity>
     public Predicate<TEntity> And(Expression<Func<TEntity, bool>> predicateExpression)
     {
         if (this.predicateExpression != null)
+        {
+            var @param = Expression.Parameter(typeof(TEntity), "x");
             this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(
-                Expression.Add(this.predicateExpression.Body, predicateExpression.Body)
+                Expression.AndAlso(
+                    Expression.Invoke(this.predicateExpression, @param),
+                    Expression.Invoke(predicateExpression, @param)),
+                @param
             );
+        }
         else
             this.predicateExpression = predicateExpression;
         return this;
@@ -102,10 +108,17 @@ public class Predicate<TEntity>
 
     public Predicate<TEntity> Or(Expression<Func<TEntity, bool>> predicateExpression)
     {
+
         if (this.predicateExpression != null)
+        {
+            var @param = Expression.Parameter(typeof(TEntity), "x");
             this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(
-                Expression.Or(this.predicateExpression.Body, predicateExpression.Body)
+                Expression.OrElse(
+                    Expression.Invoke(this.predicateExpression, @param),
+                    Expression.Invoke(predicateExpression, @param)),
+                @param
             );
+        }
         else
             this.predicateExpression = predicateExpression;
         return this;
@@ -114,12 +127,15 @@ public class Predicate<TEntity>
     public Predicate<TEntity> Not(Expression<Func<TEntity, bool>> predicateExpression)
     {
         if (this.predicateExpression != null)
-            this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(Expression.Not(this.predicateExpression));
+            this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(
+                Expression.Not(this.predicateExpression.Body), this.predicateExpression.Parameters[0]
+            );
         else
-            this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(Expression.Not(predicateExpression));
+            this.predicateExpression = Expression.Lambda<Func<TEntity, bool>>(
+                Expression.Not(predicateExpression.Body), predicateExpression.Parameters[0]
+            );
         return this;
     }
-
 
     public Expression<Func<TEntity, bool>>? ToPredicate()
     {

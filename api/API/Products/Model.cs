@@ -34,14 +34,15 @@ public class ProductsParam
     private const int MaxPageSize = 50;
     private const int DefaultPageSize = 10;
     private int pageSize = DefaultPageSize;
-    private int pageIndex = 1;
+    private int pageIndex = 0;
     private string? search;
 
     public int PageIndex
     {
         get => pageIndex;
-        set => pageIndex = value < 1 ? 1 : value;
+        set => pageIndex = value < 0 ? 0 : value - 1;
     }
+
     public int PageSize
     {
         get => pageSize;
