@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Ecommerce.API.Accounts;
 
-public class AppUser : IdentityUser
+public class ApplicationUser : IdentityUser
 {
     public string? DisplayName { get; set; }
     public Address? Address { get; set; }
@@ -20,7 +20,7 @@ public class Address
     public required string ZipCode { get; set; }
 
     public string? AppUserId { get; set; }
-    public AppUser? AppUser { get; set; }
+    public ApplicationUser? AppUser { get; set; }
 }
 
 public class AddressDTO

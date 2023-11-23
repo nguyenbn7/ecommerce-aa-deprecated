@@ -12,12 +12,12 @@ namespace Ecommerce.API.Accounts;
 
 public class AccountController : BaseAPIController
 {
-    private readonly UserManager<AppUser> userManager;
-    private readonly SignInManager<AppUser> signInManager;
+    private readonly UserManager<ApplicationUser> userManager;
+    private readonly SignInManager<ApplicationUser> signInManager;
     private readonly ITokenService tokenService;
     private readonly IMapper mapper;
 
-    public AccountController(ILogger<AccountController> logger, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService, IMapper mapper)
+    public AccountController(ILogger<AccountController> logger, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ITokenService tokenService, IMapper mapper)
         : base(logger)
     {
         this.mapper = mapper;
@@ -111,7 +111,7 @@ public class AccountController : BaseAPIController
             });
         }
 
-        var user = new AppUser
+        var user = new ApplicationUser
         {
             DisplayName = registerDTO.DisplayName,
             Email = registerDTO.Email,

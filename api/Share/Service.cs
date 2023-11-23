@@ -1,21 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Reflection;
 using System.Security.Claims;
 using System.Text;
 using Ecommerce.API.Accounts;
-using Ecommerce.API.ProductBrands;
-using Ecommerce.API.Products;
-using Ecommerce.API.ProductTypes;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Ecommerce.Share.Service;
 
 public interface ITokenService
 {
-    string CreateToken(AppUser user);
+    string CreateToken(ApplicationUser user);
 }
-
 
 public class TokenService : ITokenService
 {
@@ -29,7 +23,7 @@ public class TokenService : ITokenService
         key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appKey));
     }
 
-    public string CreateToken(AppUser user)
+    public string CreateToken(ApplicationUser user)
     {
         var claims = new List<Claim>
         {
@@ -52,22 +46,5 @@ public class TokenService : ITokenService
         var token = tokenHandler.CreateToken(tokenDescriptor);
 
         return tokenHandler.WriteToken(token);
-    }
-}
-
-public class StoreContext : DbContext
-{
-    public StoreContext(DbContextOptions<StoreContext> options) : base(options)
-    {
-    }
-
-    public required DbSet<Product> Products { get; set; }
-    public required DbSet<ProductBrand> ProductBrands { get; set; }
-    public required DbSet<ProductType> ProductTypes { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
 }

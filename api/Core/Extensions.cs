@@ -1,8 +1,14 @@
+using System.Text;
+using Ecommerce.API.Accounts;
 using Ecommerce.API.Baskets;
+using Ecommerce.Core.Database;
 using Ecommerce.Core.Middleware;
 using Ecommerce.Share.GenericRepository;
 using Ecommerce.Share.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
 
@@ -40,7 +46,7 @@ public static class ServicesExtensions
         return services;
     }
 
-    public static IServiceCollection AddAppDbContext(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddStoreContext(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<StoreContext>(options =>
         {
@@ -89,5 +95,49 @@ public static class ServicesExtensions
         app.UseSwagger();
         app.UseSwaggerUI();
         return app;
+    }
+
+    public static IServiceCollection AddIdentityServices(this IServiceCollection services, IConfiguration config)
+    {
+        services.AddDbContext<ApplicationIdentityDbContext>(options =>
+        {
+            options.UseNpgsql(config.GetConnectionString("DevelopmentConn"));
+        });
+
+        services.AddIdentityCore<ApplicationUser>(opt =>
+        {
+            // add identity options here
+        })
+        .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
+        .AddSignInManager<SignInManager<ApplicationUser>>();
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                var appKey = config["Token:Key"];
+                var appIssuer = config["Token:Issuer"];
+                if (appKey == null)
+                {
+                    throw new Exception("Token:Key is null");
+                }
+
+                if (appIssuer == null)
+                {
+                    throw new Exception("Token:Issuer is null");
+                }
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(appKey)),
+                    ValidIssuer = appIssuer,
+                    ValidateIssuer = true,
+                    ValidateAudience = false
+                };
+            });
+
+        services.AddAuthorization();
+
+        return services;
     }
 }
