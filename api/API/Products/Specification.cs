@@ -1,9 +1,10 @@
 using System.Linq.Expressions;
 using Ecommerce.Share;
+using Ecommerce.Share.Specification;
 
-namespace Ecommerce.API.Product.Specification;
+namespace Ecommerce.API.Products;
 
-public class ProductsSpecification : ISpecification<Model.Product>
+public class ProductsSpecification : ISpecification<Product>
 {
     private readonly int? brandId;
     private readonly int? typeId;
@@ -16,7 +17,7 @@ public class ProductsSpecification : ISpecification<Model.Product>
         this.searchTerm = searchTerm?.ToLower();
     }
 
-    public Expression<Func<Model.Product, bool>>? ToPredicate(CriteriaBuilder<Model.Product> builder)
+    public Expression<Func<Product, bool>>? ToPredicate(CriteriaBuilder<Product> builder)
     {
         var criteria = builder.Construct();
         if (brandId != null)
@@ -38,7 +39,7 @@ public class ProductsSpecification : ISpecification<Model.Product>
     }
 }
 
-public class ProductSpecification : ISpecification<Model.Product>
+public class ProductSpecification : ISpecification<Product>
 {
     private readonly int id;
 
@@ -47,7 +48,7 @@ public class ProductSpecification : ISpecification<Model.Product>
         this.id = id;
     }
 
-    public Expression<Func<Model.Product, bool>>? ToPredicate(CriteriaBuilder<Model.Product> builder)
+    public Expression<Func<Product, bool>>? ToPredicate(CriteriaBuilder<Product> builder)
     {
         return builder.Construct(p => p.Id == id).ToPredicate();
     }

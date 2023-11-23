@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Mime;
 using System.Text.Json;
-using Ecommerce.Share;
+using Ecommerce.Share.Model;
 
-namespace Ecommerce.Core;
+namespace Ecommerce.Core.Middleware;
 
 public class HandleNotFoundRouteMiddleware : IMiddleware
 {

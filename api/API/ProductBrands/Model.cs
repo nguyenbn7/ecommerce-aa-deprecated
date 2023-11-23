@@ -1,4 +1,4 @@
-namespace Ecommerce.API.ProductBrand.Model;
+namespace Ecommerce.API.ProductBrands;
 
 public class ProductBrand
 {

@@ -1,4 +1,4 @@
-namespace Ecommerce.API.Product.Controller.Param;
+namespace Ecommerce.API.Products;
 
 public class ProductsParam
 {

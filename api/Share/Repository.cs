@@ -1,26 +1,14 @@
-using System.Linq.Expressions;
+using Ecommerce.Share.Model;
+using Ecommerce.Share.Specification;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ecommerce.Share;
+namespace Ecommerce.Share.GenericRepository;
 
-
-
-public enum SortDirection
+public interface IRepository<TEntity, TKey> where TEntity : class
 {
-    ASC = 1,
-    DESC = 2
-}
-
-public class Sort<TEntity, TKey> where TEntity : class
-{
-    public Expression<Func<TEntity, TKey>> By { get; init; }
-    public SortDirection Direction { get; init; }
-
-    public Sort(Expression<Func<TEntity, TKey>> by)
-    {
-        By = by;
-        Direction = SortDirection.ASC;
-    }
+    Task<IReadOnlyList<TEntity>> GetAllAsync(ISpecification<TEntity>? specification = null, List<Sort<TEntity, TKey>>? sorts = null);
+    Task<Page<TEntity>> GetAllAsync(Pageable pageable, ISpecification<TEntity>? specification = null, List<Sort<TEntity, TKey>>? sorts = null);
+    Task<TEntity?> GetOneAsync(ISpecification<TEntity>? specification = null, List<Sort<TEntity, TKey>>? sorts = null);
 }
 
 public class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntity : class
@@ -55,7 +43,7 @@ public class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntit
         return await query.ToListAsync();
     }
 
-    public async Task<Pagination<TEntity>> GetAllAsync(Pageable pageable, ISpecification<TEntity>? specification = null, List<Sort<TEntity, TKey>>? sorts = null)
+    public async Task<Page<TEntity>> GetAllAsync(Pageable pageable, ISpecification<TEntity>? specification = null, List<Sort<TEntity, TKey>>? sorts = null)
     {
         var query = dbContext.Set<TEntity>().AsNoTracking().AsQueryable();
         var predicate = specification?.ToPredicate(new CriteriaBuilder<TEntity>());
@@ -80,7 +68,7 @@ public class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntit
         query = query.Skip(pageable.Index).Take(pageable.Size);
         var data = await query.ToListAsync();
 
-        return new Pagination<TEntity>
+        return new Page<TEntity>
         {
             PageIndex = pageable.Index,
             PageSize = data.Count,
@@ -111,32 +99,4 @@ public class Repository<TEntity, TKey> : IRepository<TEntity, TKey> where TEntit
 
         return await query.FirstOrDefaultAsync();
     }
-}
-
-public class Pagination<T> where T : class
-{
-    public int PageIndex { get; set; }
-    public int PageSize { get; set; }
-    public int TotalItems { get; set; }
-    public required IReadOnlyList<T> Data { get; set; }
-}
-
-public class Pageable
-{
-    public int Index { get; init; }
-    public int Size { get; init; }
-
-    public static Pageable Of(int pageIndex, int pageSize)
-    {
-        return new Pageable
-        {
-            Index = pageIndex < 0 ? 0 : pageIndex,
-            Size = pageSize < 1 ? 6 : pageSize
-        };
-    }
-}
-
-public class TokenService : ITokenService
-{
-    
 }

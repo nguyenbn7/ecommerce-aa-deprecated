@@ -1,13 +1,14 @@
 using Ecommerce.Share;
+using Ecommerce.Share.GenericRepository;
 
-namespace Ecommerce.API.ProductType.Controller;
+namespace Ecommerce.API.ProductTypes;
 
 [Route("api/products/types")]
 public class ProductTypesController : BaseAPIController
 {
-    private readonly IRepository<Model.ProductType, int> productTypeRepository;
+    private readonly IRepository<ProductType, int> productTypeRepository;
 
-    public ProductTypesController(IRepository<Model.ProductType, int> productTypeRepository)
+    public ProductTypesController(IRepository<ProductType, int> productTypeRepository)
     {
         this.productTypeRepository = productTypeRepository;
     }

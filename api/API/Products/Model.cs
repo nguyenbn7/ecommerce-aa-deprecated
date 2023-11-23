@@ -1,7 +1,7 @@
-using Ecommerce.API.productBrand;
-using Ecommerce.API.productType;
+using Ecommerce.API.ProductBrands;
+using Ecommerce.API.ProductTypes;
 
-namespace Ecommerce.API.Product.Model;
+namespace Ecommerce.API.Products;
 
 public class Product
 {
