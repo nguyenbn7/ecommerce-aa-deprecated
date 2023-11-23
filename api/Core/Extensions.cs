@@ -3,6 +3,7 @@ using Ecommerce.API.Accounts;
 using Ecommerce.API.Baskets;
 using Ecommerce.Core.Database;
 using Ecommerce.Core.Middleware;
+using Ecommerce.Migrations.Seeding;
 using Ecommerce.Share.GenericRepository;
 using Ecommerce.Share.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -139,5 +140,28 @@ public static class ServicesExtensions
         services.AddAuthorization();
 
         return services;
+    }
+
+    public static async Task SeedAppData(this WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<StoreContext>();
+        var identityContext = services.GetRequiredService<ApplicationIdentityDbContext>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var logger = services.GetRequiredService<ILogger<Program>>();
+
+        try
+        {
+            await context.Database.MigrateAsync();
+            await identityContext.Database.MigrateAsync();
+            await SeedData.SeedProductAsync(context, logger);
+            await SeedData.SeedUsersAsync(userManager);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError("An error occured during migration with error details below: {}", ex.Message);
+            logger.LogError("{}", ex.StackTrace);
+        }
     }
 }

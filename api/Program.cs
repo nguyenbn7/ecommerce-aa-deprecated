@@ -67,6 +67,6 @@ app.UseMiddleware<HandleNotFoundRouteMiddleware>();
 
 app.MapControllers();
 
-// await app.SeedAppData();
+await app.SeedAppData();
 
 app.Run();
