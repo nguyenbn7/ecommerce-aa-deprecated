@@ -1,0 +1,19 @@
+<div class="form-floating mb-3">
+    <input type={{type}} [formControl]="control" placeholder={{label}} class="form-control"
+        [ngClass]="(control.touched) ? control.invalid ? 'is-invalid':'is-valid':null" />
+    <div class="fa fa-spinner fa-spin loader" *ngIf="control.status === 'PENDING'"></div>
+    <label for="floatingInput">{{label}}</label>
+    <div *ngIf="control.errors?.['required']" class="invalid-feedback">
+        Please enter your {{label}}
+    </div>
+    <div *ngIf="control.errors?.['email']" class="invalid-feedback">
+        Invalid email address
+    </div>
+    <div *ngIf="control.errors?.['emailExists']" class="invalid-feedback">
+        Email address is taken
+    </div>
+    <div *ngIf="control.errors?.['pattern']" class="invalid-feedback">
+        Password must be greater than 6 characters contain 1 uppercase, 1 lowercase, 1 number and 1 special
+        character
+    </div>
+</div>

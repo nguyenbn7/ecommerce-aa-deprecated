@@ -1,0 +1,56 @@
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <div class="my-2">
+                <h5 class="text-warning ms-3">Sort By</h5>
+                <select class="form-select mb-4" (change)="onSortSelected($event)">
+                    <option *ngFor="let sort of sortOptions" [value]="sort.value">{{sort.name}}</option>
+                </select>
+
+            </div>
+            <div class="my-2">
+                <h5 class="text-warning ms-3">Brands</h5>
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let brand of productBrands"
+                        [class.active]="brand.id === shopParams.brandId" [value]="brand.id"
+                        (click)="onBrandIdSelected(brand.id)">
+                        {{brand.name}}
+                    </li>
+                </ul>
+            </div>
+            <div class="my-2">
+                <h5 class="text-warning ms-3">Types</h5>
+                <ul class="list-group">
+                    <li class="list-group-item" *ngFor="let type of productTypes"
+                        [class.active]="type.id === shopParams.typeId" [value]="type.id"
+                        (click)="onTypeIdSelected(type.id)">
+                        {{type.name}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-9">
+            <div class="d-flex justify-content-between align-items-center pb-2">
+                <app-paging-header [totalItems]="totalItems" [pageNumber]="shopParams.pageNumber"
+                    [pageSize]="shopParams.pageSize"></app-paging-header>
+                <div class="d-flex mt-2">
+                    <input type="text" placeholder="Search" class="form-control me-2" #search
+                        (keyup.enter)="onSearch()">
+                    <button type="button" class="btn btn-outline-primary mx-2" (click)="onSearch()">Search</button>
+                    <button type="button" class="btn btn-outline-danger" (click)="onReset()">Clear</button>
+                </div>
+            </div>
+
+            <div class="row row-cols-3 g-3 mb-4">
+                <div class="col" *ngFor="let product of products">
+                    <app-product-item [product]="product"></app-product-item>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mb-3" *ngIf="totalItems > 0">
+                <app-pager [totalItems]="totalItems" [pageSize]="shopParams.pageSize"
+                    (pageChanged)="onPageChanged($event)"></app-pager>
+            </div>
+        </div>
+    </div>
+</div>
