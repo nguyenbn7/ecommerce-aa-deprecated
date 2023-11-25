@@ -2,7 +2,7 @@ using Ecommerce.Core.Database;
 using Ecommerce.Share.Model;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Ecommerce_ASP_NET_Core.Buggy;
+namespace Ecommerce.Experiment;
 
 [ApiController]
 [Route("api/[controller]")]
