@@ -1,4 +1,4 @@
-namespace Ecommerce.API.ProductTypes;
+namespace Ecommerce.Routes.ProductTypes;
 
 public class ProductType
 {

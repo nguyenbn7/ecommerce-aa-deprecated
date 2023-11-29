@@ -1,6 +1,6 @@
 using System.Text;
-using Ecommerce.API.Accounts;
-using Ecommerce.API.Baskets;
+using Ecommerce.Routes.Accounts;
+using Ecommerce.Routes.Baskets;
 using Ecommerce.Core.Database;
 using Ecommerce.Core.Middleware;
 using Ecommerce.Migrations.Seeding;

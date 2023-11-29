@@ -4,7 +4,7 @@ using Ecommerce.Share.GenericRepository;
 using Ecommerce.Share.Model;
 using Ecommerce.Share.Specification;
 
-namespace Ecommerce.API.Products;
+namespace Ecommerce.Routes.Products;
 
 public class ProductsController : BaseAPIController
 {

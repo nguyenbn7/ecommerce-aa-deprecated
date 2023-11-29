@@ -1,7 +1,7 @@
 using AutoMapper;
 using Ecommerce.Share.Controller;
 
-namespace Ecommerce.API.Baskets;
+namespace Ecommerce.Routes.Baskets;
 
 public class BasketController : BaseAPIController
 {

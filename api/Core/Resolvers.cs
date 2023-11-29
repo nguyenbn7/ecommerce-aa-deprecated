@@ -1,5 +1,5 @@
 using AutoMapper;
-using Ecommerce.API.Products;
+using Ecommerce.Routes.Products;
 
 namespace Ecommerce.Core.Resolvers;
 

@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace Ecommerce.API.Order;
+namespace Ecommerce.Routes.Order;
 
 public class Address
 {

@@ -1,4 +1,4 @@
-namespace Ecommerce.API.ProductBrands;
+namespace Ecommerce.Routes.ProductBrands;
 
 public class ProductBrand
 {

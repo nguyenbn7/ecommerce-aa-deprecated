@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
-namespace Ecommerce.API.Accounts;
+namespace Ecommerce.Routes.Accounts;
 
 public class ApplicationUser : IdentityUser
 {

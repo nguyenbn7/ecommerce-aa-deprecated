@@ -22,7 +22,7 @@ namespace Ecommerce.Migrations.Identity
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Ecommerce.API.Accounts.Address", b =>
+            modelBuilder.Entity("Ecommerce.Routes.Accounts.Address", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,7 +65,7 @@ namespace Ecommerce.Migrations.Identity
                     b.ToTable("Address");
                 });
 
-            modelBuilder.Entity("Ecommerce.API.Accounts.ApplicationUser", b =>
+            modelBuilder.Entity("Ecommerce.Routes.Accounts.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -264,11 +264,11 @@ namespace Ecommerce.Migrations.Identity
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Ecommerce.API.Accounts.Address", b =>
+            modelBuilder.Entity("Ecommerce.Routes.Accounts.Address", b =>
                 {
-                    b.HasOne("Ecommerce.API.Accounts.ApplicationUser", "AppUser")
+                    b.HasOne("Ecommerce.Routes.Accounts.ApplicationUser", "AppUser")
                         .WithOne("Address")
-                        .HasForeignKey("Ecommerce.API.Accounts.Address", "AppUserId");
+                        .HasForeignKey("Ecommerce.Routes.Accounts.Address", "AppUserId");
 
                     b.Navigation("AppUser");
                 });
@@ -284,7 +284,7 @@ namespace Ecommerce.Migrations.Identity
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Ecommerce.API.Accounts.ApplicationUser", null)
+                    b.HasOne("Ecommerce.Routes.Accounts.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -293,7 +293,7 @@ namespace Ecommerce.Migrations.Identity
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Ecommerce.API.Accounts.ApplicationUser", null)
+                    b.HasOne("Ecommerce.Routes.Accounts.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -308,7 +308,7 @@ namespace Ecommerce.Migrations.Identity
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Ecommerce.API.Accounts.ApplicationUser", null)
+                    b.HasOne("Ecommerce.Routes.Accounts.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -317,14 +317,14 @@ namespace Ecommerce.Migrations.Identity
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Ecommerce.API.Accounts.ApplicationUser", null)
+                    b.HasOne("Ecommerce.Routes.Accounts.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Ecommerce.API.Accounts.ApplicationUser", b =>
+            modelBuilder.Entity("Ecommerce.Routes.Accounts.ApplicationUser", b =>
                 {
                     b.Navigation("Address");
                 });

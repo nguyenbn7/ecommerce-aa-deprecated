@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ecommerce.API.Accounts;
+namespace Ecommerce.Routes.Accounts;
 
 
 public class AccountController : BaseAPIController

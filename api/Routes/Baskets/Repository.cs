@@ -1,7 +1,7 @@
 using System.Text.Json;
 using StackExchange.Redis;
 
-namespace Ecommerce.API.Baskets;
+namespace Ecommerce.Routes.Baskets;
 
 public interface IBasketRepository
 {

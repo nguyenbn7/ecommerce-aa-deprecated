@@ -1,7 +1,7 @@
 using Ecommerce.Share.Controller;
 using Ecommerce.Share.GenericRepository;
 
-namespace Ecommerce.API.ProductTypes;
+namespace Ecommerce.Routes.ProductTypes;
 
 [Route("api/products/types")]
 public class ProductTypesController : BaseAPIController

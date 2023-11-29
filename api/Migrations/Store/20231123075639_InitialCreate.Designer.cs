@@ -24,7 +24,7 @@ namespace Ecommerce.Migrations.Store
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Ecommerce.API.ProductBrands.ProductBrand", b =>
+            modelBuilder.Entity("Ecommerce.Routes.ProductBrands.ProductBrand", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -41,7 +41,7 @@ namespace Ecommerce.Migrations.Store
                     b.ToTable("ProductBrands");
                 });
 
-            modelBuilder.Entity("Ecommerce.API.ProductTypes.ProductType", b =>
+            modelBuilder.Entity("Ecommerce.Routes.ProductTypes.ProductType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace Ecommerce.Migrations.Store
                     b.ToTable("ProductTypes");
                 });
 
-            modelBuilder.Entity("Ecommerce.API.Products.Product", b =>
+            modelBuilder.Entity("Ecommerce.Routes.Products.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,15 +96,15 @@ namespace Ecommerce.Migrations.Store
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Ecommerce.API.Products.Product", b =>
+            modelBuilder.Entity("Ecommerce.Routes.Products.Product", b =>
                 {
-                    b.HasOne("Ecommerce.API.ProductBrands.ProductBrand", "ProductBrand")
+                    b.HasOne("Ecommerce.Routes.ProductBrands.ProductBrand", "ProductBrand")
                         .WithMany()
                         .HasForeignKey("ProductBrandId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Ecommerce.API.ProductTypes.ProductType", "ProductType")
+                    b.HasOne("Ecommerce.Routes.ProductTypes.ProductType", "ProductType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
                         .OnDelete(DeleteBehavior.Cascade)

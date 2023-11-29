@@ -1,7 +1,7 @@
 using Ecommerce.Share.Controller;
 using Ecommerce.Share.GenericRepository;
 
-namespace Ecommerce.API.ProductBrands;
+namespace Ecommerce.Routes.ProductBrands;
 
 [Route("api/products/brands")]
 public class ProductBrandsController : BaseAPIController

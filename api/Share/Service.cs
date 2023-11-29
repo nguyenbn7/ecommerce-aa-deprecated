@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Ecommerce.API.Accounts;
+using Ecommerce.Routes.Accounts;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Ecommerce.Share.Service;

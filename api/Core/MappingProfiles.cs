@@ -1,7 +1,7 @@
 using AutoMapper;
-using Ecommerce.API.Accounts;
-using Ecommerce.API.Baskets;
-using Ecommerce.API.Products;
+using Ecommerce.Routes.Accounts;
+using Ecommerce.Routes.Baskets;
+using Ecommerce.Routes.Products;
 using Ecommerce.Core.Resolvers;
 
 namespace Ecommerce.Core.MappingProfiles;

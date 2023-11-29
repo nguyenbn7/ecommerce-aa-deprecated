@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Ecommerce.API.Baskets;
+namespace Ecommerce.Routes.Baskets;
 
 public class BasketItem
 {

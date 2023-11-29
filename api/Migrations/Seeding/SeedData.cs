@@ -1,8 +1,8 @@
 using System.Text.Json;
-using Ecommerce.API.Accounts;
-using Ecommerce.API.ProductBrands;
-using Ecommerce.API.Products;
-using Ecommerce.API.ProductTypes;
+using Ecommerce.Routes.Accounts;
+using Ecommerce.Routes.ProductBrands;
+using Ecommerce.Routes.Products;
+using Ecommerce.Routes.ProductTypes;
 using Ecommerce.Core.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
