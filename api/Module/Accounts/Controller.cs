@@ -1,0 +1,142 @@
+using System.Security.Claims;
+using AutoMapper;
+using Ecommerce.Shared;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+namespace Ecommerce.Module.Accounts;
+
+public class AccountController : APIController
+{
+    private readonly UserManager<AppUser> _userManager;
+    private readonly SignInManager<AppUser> _signInManager;
+    private readonly ITokenService _tokenService;
+    private readonly IMapper _mapper;
+
+    public AccountController(
+        ILogger<AccountController> logger,
+        UserManager<AppUser> userManager,
+        SignInManager<AppUser> signInManager,
+        ITokenService tokenService,
+        IMapper mapper)
+        : base(logger)
+    {
+        _mapper = mapper;
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _tokenService = tokenService;
+    }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> GetCurrentUser()
+    {
+        var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
+        if (email == null)
+            return BadRequest(new ErrorResponse(400));
+
+        var user = await _userManager.FindByEmailAsync(email);
+
+        return Ok(new LoginSuccess
+        {
+            Email = email,
+            Token = _tokenService.CreateAccessToken(user!),
+            DisplayName = user!.DisplayName
+        });
+    }
+
+    [HttpGet("emailexists")]
+    public async Task<ActionResult<bool>> CheckEmailExists([FromQuery] string email)
+    {
+        return await _userManager.FindByEmailAsync(email) != null;
+    }
+
+    [HttpGet("address")]
+    [Authorize]
+    public async Task<IActionResult> GetUserAddress()
+    {
+        var email = HttpContext.User.FindFirstValue(ClaimTypes.Email)?.ToUpper();
+        if (email == null)
+            return Unauthorized(new ErrorResponse(401));
+
+        var user = await _userManager.Users.AsNoTracking()
+            .Include(u => u.Address).SingleOrDefaultAsync(u => u.NormalizedEmail == email);
+
+        return Ok(_mapper.Map<Address, AddressDTO>(user!.Address!));
+    }
+
+    [HttpPut("address")]
+    [Authorize]
+    public async Task<ActionResult<AddressDTO>> UpdateUserAddress(AddressDTO address)
+    {
+        var email = HttpContext.User.FindFirstValue(ClaimTypes.Email)?.ToUpper();
+        if (email == null)
+            return Unauthorized(new ErrorResponse(401));
+
+        var user = await _userManager.Users.Include(u => u.Address)
+            .SingleOrDefaultAsync(u => u.NormalizedEmail == email);
+
+        user!.Address = _mapper.Map<AddressDTO, Address>(address);
+
+        var result = await _userManager.UpdateAsync(user);
+
+        if (result.Succeeded) return _mapper.Map<Address, AddressDTO>(user!.Address!);
+
+        return BadRequest(new ErrorResponse("Can not update address"));
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginDTO loginDto)
+    {
+        var unauthorizedResponse = new ErrorResponse("Email or Password are not recognized");
+
+        var user = await _userManager.FindByEmailAsync(loginDto.Email);
+        if (user == null)
+            return Unauthorized(unauthorizedResponse);
+
+        var result = await _signInManager.CheckPasswordSignInAsync(user, loginDto.Password, false);
+
+        if (!result.Succeeded)
+            return Unauthorized(unauthorizedResponse);
+
+        return Ok(new LoginSuccess
+        {
+            Email = user.Email,
+            Token = _tokenService.CreateAccessToken(user),
+            DisplayName = user.DisplayName
+        });
+    }
+
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterDTO registerDTO)
+    {
+        if ((await CheckEmailExists(registerDTO.Email)).Value)
+        {
+            return BadRequest(new ValidationErrorResponse
+            {
+                Errors = new string[] { "Email address in use" }
+            });
+        }
+
+        var user = new AppUser
+        {
+            DisplayName = registerDTO.DisplayName,
+            Email = registerDTO.Email,
+            UserName = registerDTO.Email
+        };
+
+        var result = await _userManager.CreateAsync(user, registerDTO.Password);
+
+        if (!result.Succeeded)
+            return BadRequest(new ErrorResponse(400));
+
+        return Ok(new LoginSuccess
+        {
+            DisplayName = user.DisplayName,
+            Token = _tokenService.CreateAccessToken(user),
+            Email = user.Email
+        });
+    }
+
+}

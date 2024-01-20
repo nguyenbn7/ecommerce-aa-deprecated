@@ -1,5 +1,4 @@
-using Ecommerce.Core.Database;
-using Ecommerce.Share.Model;
+using Ecommerce.Shared;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Ecommerce.Experiment;
@@ -8,23 +7,24 @@ namespace Ecommerce.Experiment;
 [Route("api/[controller]")]
 public class BuggyController : ControllerBase
 {
-    private readonly StoreContext storeContext;
+    private AppDbContext Context { get; }
 
-    public BuggyController(StoreContext storeContext)
+    public BuggyController(AppDbContext context)
     {
-        this.storeContext = storeContext;
+        Context = context;
     }
 
     [HttpGet("testauth")]
     [Authorize]
-    public IActionResult GetTextSecret() {
+    public IActionResult GetTextSecret()
+    {
         return Ok("KaBOOOMMM!");
     }
 
     [HttpGet("not-found")]
     public IActionResult GetNotFoundRequest()
     {
-        var thing = storeContext.Products.Find(42);
+        var thing = Context.Products.Find(42);
         if (thing == null)
         {
             return NotFound(new ErrorResponse(StatusCodes.Status404NotFound));
@@ -35,7 +35,7 @@ public class BuggyController : ControllerBase
     [HttpGet("server-error")]
     public IActionResult GetServerErrorRequest()
     {
-        var thing = storeContext.Products.Find(42);
+        var thing = Context.Products.Find(42);
 #nullable disable
         var thingToReturn = thing.ToString();
 #nullable enable

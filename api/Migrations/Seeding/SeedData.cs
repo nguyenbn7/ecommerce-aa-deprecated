@@ -1,19 +1,19 @@
 using System.Text.Json;
-using Ecommerce.Routes.Accounts;
-using Ecommerce.Routes.ProductBrands;
-using Ecommerce.Routes.Products;
-using Ecommerce.Routes.ProductTypes;
-using Ecommerce.Core.Database;
+using Ecommerce.Module.Accounts;
+using Ecommerce.Module.ProductBrands;
+using Ecommerce.Module.Products;
+using Ecommerce.Module.ProductTypes;
+using Ecommerce.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Migrations.Seeding;
 
-public class SeedData
+public class DataSeed
 {
-    public static async Task SeedProductBrandAsync(StoreContext storeContext, ILogger logger)
+    public static async Task SeedProductBrandsAsync(AppDbContext context, ILogger logger)
     {
-        if (await storeContext.ProductBrands.AnyAsync()) return;
+        if (await context.ProductBrands.AnyAsync()) return;
 
         var brandsData = await File.ReadAllTextAsync("Migrations/Seeding/brands.json");
         var productBrands = JsonSerializer.Deserialize<List<ProductBrand>>(brandsData);
@@ -23,13 +23,13 @@ public class SeedData
             return;
         }
 
-        storeContext.ProductBrands.AddRange(productBrands);
-        await storeContext.SaveChangesAsync();
+        context.ProductBrands.AddRange(productBrands);
+        await context.SaveChangesAsync();
     }
 
-    public static async Task SeedProductTypeAsync(StoreContext storeContext, ILogger logger)
+    public static async Task SeedProductTypesAsync(AppDbContext context, ILogger logger)
     {
-        if (await storeContext.ProductTypes.AnyAsync()) return;
+        if (await context.ProductTypes.AnyAsync()) return;
 
         var typesData = await File.ReadAllTextAsync("Migrations/Seeding/types.json");
         var productTypes = JsonSerializer.Deserialize<List<ProductType>>(typesData);
@@ -39,16 +39,13 @@ public class SeedData
             return;
         }
 
-        storeContext.ProductTypes.AddRange(productTypes);
-        await storeContext.SaveChangesAsync();
+        context.ProductTypes.AddRange(productTypes);
+        await context.SaveChangesAsync();
     }
 
-    public static async Task SeedProductAsync(StoreContext storeContext, ILogger logger)
+    public static async Task SeedProductsAsync(AppDbContext context, ILogger logger)
     {
-        if (await storeContext.Products.AnyAsync()) return;
-
-        await SeedProductBrandAsync(storeContext, logger);
-        await SeedProductTypeAsync(storeContext, logger);
+        if (await context.Products.AnyAsync()) return;
 
         var productsData = await File.ReadAllTextAsync("Migrations/Seeding/products.json");
         var products = JsonSerializer.Deserialize<List<Product>>(productsData);
@@ -58,16 +55,16 @@ public class SeedData
             return;
         }
 
-        storeContext.Products.AddRange(products);
-        await storeContext.SaveChangesAsync();
+        context.Products.AddRange(products);
+        await context.SaveChangesAsync();
     }
 
-    public static async Task SeedUsersAsync(UserManager<ApplicationUser> userManager)
+    public static async Task SeedUsersAsync(UserManager<AppUser> userManager)
     {
         if (userManager.Users.Any())
             return;
 
-        var user = new ApplicationUser
+        var user = new AppUser
         {
             DisplayName = "Bob",
             Email = "bob@test.com",

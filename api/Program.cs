@@ -1,39 +1,27 @@
-using Ecommerce.Core.Extensions;
-using Ecommerce.Core.Middleware;
-using Ecommerce.Share.Model;
+using Ecommerce.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerDocumentation();
-builder.Services.AddCustomServices();
-builder.Services.AddIdentityServices(builder.Configuration);
-builder.Services.AddStoreContext(builder.Configuration);
-builder.Services.AddRedis(builder.Configuration);
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-        {
-            options.InvalidModelStateResponseFactory = actionContext =>
-            {
-                var errors = actionContext.ModelState
-                    .Where(e => e.Value?.Errors.Count > 0)
-                    .SelectMany(x => x.Value?.Errors ?? new())
-                    .Select(x => x.ErrorMessage)
-                    .ToArray();
+builder.Services.AddAppDbContext(builder.Configuration);
 
-                var errorResponse = new ValidationErrorResponse
-                {
-                    Errors = errors
-                };
+builder.Services.AddRedis(builder.Configuration);
 
-                return new BadRequestObjectResult(errorResponse);
-            };
-        });
+builder.Services.AddAuthentication();
+
+builder.Services.AddAuthorization();
+
+builder.Services.UseIdentity(builder.Configuration, builder.Environment);
+
+builder.Services.UseSwagger();
+
+builder.Services.AddAppServices();
+
+builder.Services.ConfigureApiBehaviourOptions();
 
 builder.Services.AddCors(opt =>
 {
@@ -50,7 +38,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwaggerDocumentation();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseMiddleware<ExceptionHandlerMiddleware>();
