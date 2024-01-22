@@ -1,4 +1,5 @@
-using Ecommerce.Core;
+using Ecommerce.Core.Extension;
+using Ecommerce.Core.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,7 +43,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ExceptionHandler>();
 
 app.UseStaticFiles();
 
@@ -52,9 +53,11 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseMiddleware<HandleNotFoundRouteMiddleware>();
+app.UseMiddleware<RouteNotFoundHandler>();
 
 app.MapControllers();
+
+await app.ApplyMigrations();
 
 await app.SeedAppData();
 

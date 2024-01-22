@@ -1,4 +1,5 @@
 using Ecommerce.Shared;
+using Ecommerce.Shared.Model;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Ecommerce.Experiment;

@@ -1,8 +1,6 @@
 using System.Text.Json;
-using Ecommerce.Module.Accounts;
-using Ecommerce.Module.ProductBrands;
-using Ecommerce.Module.Products;
-using Ecommerce.Module.ProductTypes;
+using Ecommerce.Module.Accounts.Model;
+using Ecommerce.Module.Products.Model;
 using Ecommerce.Shared;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
