@@ -1,3 +1,4 @@
+using Ecommerce.Shared.Database.Criteria;
 using Ecommerce.Shared.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,13 +50,12 @@ public class GenericRepository<TEntity, TKey> : Repository<TEntity, TKey> where 
 
     public async Task<Page<TEntity>> GetAllAsync(
         Pageable pageable,
+        Specification<TEntity>? specification = null,
         IEnumerable<IIncludeSpecification<TEntity>>? includes = null,
-        IPredicateSpecification<TEntity>? specification = null,
         IEnumerable<Sort<TEntity>>? sorts = null
     )
     {
         var query = dbContext.Set<TEntity>().AsNoTracking().AsQueryable();
-        var predicate = specification?.ToPredicate(new PredicateBuilder<TEntity>());
 
         if (includes != null)
         {
@@ -65,9 +65,9 @@ public class GenericRepository<TEntity, TKey> : Repository<TEntity, TKey> where 
             }
         }
 
-        if (predicate != null)
+        if (specification != null)
         {
-            query = query.Where(predicate);
+            query = query.Where(specification.IsSatisfiedBy());
         }
 
         var totalItems = await query.CountAsync();

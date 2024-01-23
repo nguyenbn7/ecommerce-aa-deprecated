@@ -1,4 +1,4 @@
-using Ecommerce.Shared;
+using Ecommerce.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Core.Database;

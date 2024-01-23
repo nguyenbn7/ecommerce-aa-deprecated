@@ -6,12 +6,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Ecommerce.Shared.Service;
 
-public class JWTAuthenticationTokenService : AuthenticationTokenService
+public class JWTAuthenticationService : AuthenticationService
 {
     private readonly IConfiguration _configuration;
     private readonly SymmetricSecurityKey _symmetricSecurityKey;
 
-    public JWTAuthenticationTokenService(IConfiguration configuration)
+    public JWTAuthenticationService(IConfiguration configuration)
     {
         _configuration = configuration;
         var secretKey = _configuration["Token:Key"] ?? throw new Exception("Token:Key not provided");

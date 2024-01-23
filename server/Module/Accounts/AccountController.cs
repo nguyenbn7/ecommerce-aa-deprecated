@@ -16,14 +16,14 @@ public class AccountController : APIController
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
-    private readonly AuthenticationTokenService _authenticationTokenService;
+    private readonly AuthenticationService _authenticationTokenService;
     private readonly IMapper _mapper;
 
     public AccountController(
         ILogger<AccountController> logger,
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
-        AuthenticationTokenService authenticationTokenService,
+        AuthenticationService authenticationTokenService,
         IMapper mapper)
         : base(logger)
     {

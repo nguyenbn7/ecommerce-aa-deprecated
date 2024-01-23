@@ -1,5 +1,4 @@
 using System.Text;
-using Ecommerce.Module.Accounts;
 using Ecommerce.Module.Baskets;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -7,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StackExchange.Redis;
-using Ecommerce.Shared;
 using Ecommerce.Shared.Service;
 using Ecommerce.Core.Middleware;
 using Ecommerce.Shared.Model;
@@ -32,7 +30,7 @@ public static class ServiceCollectionExtension
     {
         services.AddScoped(typeof(Repository<,>), typeof(GenericRepository<,>));
         services.AddScoped<IBasketRepository, BasketRepository>();
-        services.AddScoped<AuthenticationTokenService, JWTAuthenticationTokenService>();
+        services.AddScoped<AuthenticationService, JWTAuthenticationService>();
 
         services.AddTransient<ExceptionHandler>();
         services.AddTransient<RouteNotFoundHandler>();

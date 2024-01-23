@@ -1,15 +1,14 @@
 using AutoMapper;
-using Ecommerce.Module.Products;
 using Ecommerce.Module.Products.DTO;
 using Ecommerce.Module.Products.Model;
 
-namespace Ecommerce.Core;
+namespace Ecommerce.Core.AutoMapperResolver;
 
-public class ProductURLResolver : IValueResolver<Product, ProductReponse, string?>
+public class ProductImageUrl : IValueResolver<Product, ProductReponse, string?>
 {
     private readonly IConfiguration _configuration;
 
-    public ProductURLResolver(IConfiguration configuration)
+    public ProductImageUrl(IConfiguration configuration)
     {
         _configuration = configuration;
     }

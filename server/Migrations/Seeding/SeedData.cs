@@ -1,7 +1,7 @@
 using System.Text.Json;
 using Ecommerce.Module.Accounts.Model;
 using Ecommerce.Module.Products.Model;
-using Ecommerce.Shared;
+using Ecommerce.Shared.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

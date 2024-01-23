@@ -38,7 +38,22 @@ public class ProductsController : APIController
     [HttpGet]
     public async Task<ActionResult<Page<ProductReponse>>> GetProducts([FromQuery] ProductsParam @params)
     {
-        var spec = new ProductsPredicate(@params.BrandId, @params.TypeId, @params.Search);
+        var spec = new ProductSpecification();
+
+        if (@params.BrandId.HasValue)
+        {
+            spec.And(new GetProductBrandByBrandId(@params.BrandId.Value));
+        }
+
+        if (@params.TypeId.HasValue)
+        {
+            spec.And(new GetProductTypeByTypeId(@params.TypeId.Value));
+        }
+
+        if (@params.Search != null)
+        {
+            spec.And(new GetProductBySearchTerm(@params.Search));
+        }
 
         var sorts = new List<Sort<Product>>();
         if (!string.IsNullOrEmpty(@params.Sort))
@@ -61,7 +76,7 @@ public class ProductsController : APIController
             sorts.Add(new(p => p.Name));
         }
 
-        var pageProduct = await _productRepository.GetAllAsync(Pageable.Of(@params.PageIndex, @params.PageSize), includes, spec, sorts);
+        var pageProduct = await _productRepository.GetAllAsync(Pageable.Of(@params.PageIndex, @params.PageSize), spec, includes, sorts);
 
         return new Page<ProductReponse>
         {
@@ -88,7 +103,7 @@ public class ProductsController : APIController
         var productTypes = await _productTypeRepository.GetAllAsync();
         return Ok(productTypes);
     }
-    
+
     [HttpGet("Brands")]
     public async Task<IActionResult> GetProductBrands()
     {

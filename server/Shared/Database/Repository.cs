@@ -1,3 +1,4 @@
+using Ecommerce.Shared.Database.Criteria;
 using Ecommerce.Shared.Model;
 
 namespace Ecommerce.Shared.Database;
@@ -11,8 +12,8 @@ public interface Repository<TEntity, TKey> where TEntity : class
     );
     Task<Page<TEntity>> GetAllAsync(
         Pageable pageable,
+        Specification<TEntity>? specification = null,
         IEnumerable<IIncludeSpecification<TEntity>>? includes = null,
-        IPredicateSpecification<TEntity>? specification = null,
         IEnumerable<Sort<TEntity>>? sorts = null
     );
     Task<TEntity?> GetOneAsync(

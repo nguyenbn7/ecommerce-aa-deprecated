@@ -1,8 +1,8 @@
-using Ecommerce.Shared;
+using Ecommerce.Shared.Database;
 using Ecommerce.Shared.Model;
 using Microsoft.AspNetCore.Authorization;
 
-namespace Ecommerce.Experiment;
+namespace Ecommerce.Testing;
 
 [ApiController]
 [Route("api/[controller]")]
