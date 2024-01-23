@@ -5,7 +5,7 @@ using Ecommerce.Shared.Database;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Ecommerce.Migrations.Seeding;
+namespace Ecommerce.Data;
 
 public class DataSeed
 {
@@ -14,7 +14,7 @@ public class DataSeed
     {
         if (await context.ProductBrands.AnyAsync()) return;
 
-        var brandsData = await File.ReadAllTextAsync("Migrations/Seeding/brands.json");
+        var brandsData = await File.ReadAllTextAsync("Data/brands.json");
         var productBrands = JsonSerializer.Deserialize<List<ProductBrand>>(brandsData);
         if (productBrands == null)
         {
@@ -31,7 +31,7 @@ public class DataSeed
     {
         if (await context.ProductTypes.AnyAsync()) return;
 
-        var typesData = await File.ReadAllTextAsync("Migrations/Seeding/types.json");
+        var typesData = await File.ReadAllTextAsync("Data/types.json");
         var productTypes = JsonSerializer.Deserialize<List<ProductType>>(typesData);
         if (productTypes == null)
         {
@@ -48,7 +48,7 @@ public class DataSeed
     {
         if (await context.Products.AnyAsync()) return;
 
-        var productsData = await File.ReadAllTextAsync("Migrations/Seeding/products.json");
+        var productsData = await File.ReadAllTextAsync("Data/products.json");
         var products = JsonSerializer.Deserialize<List<Product>>(productsData);
         if (products == null)
         {

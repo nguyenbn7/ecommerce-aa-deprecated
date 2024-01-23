@@ -1,5 +1,5 @@
 using Ecommerce.Core.Database;
-using Ecommerce.Migrations.Seeding;
+using Ecommerce.Data;
 using Ecommerce.Module.Accounts.Model;
 using Ecommerce.Shared.Database;
 using Microsoft.AspNetCore.Identity;
