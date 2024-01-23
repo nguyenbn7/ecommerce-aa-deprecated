@@ -8,6 +8,6 @@ public class ProductSqliteDbContextConfiguration : IEntityTypeConfiguration<Prod
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
-        builder.Property(p => p.Price).HasColumnType("decimal(18, 2)");
+        builder.Property(p => p.Price).HasColumnType("decimal(18, 2)").HasConversion<double>();
     }
 }
