@@ -2,14 +2,14 @@ namespace Ecommerce.Shared.Model.Pagination;
 
 public class Pageable
 {
-    public int Index { get; init; }
+    public int Number { get; init; }
     public int Size { get; init; }
 
-    public static Pageable Of(int pageIndex, int pageSize)
+    public static Pageable Of(int pageNumber, int pageSize)
     {
         return new Pageable
         {
-            Index = pageIndex < 0 ? 0 : pageIndex,
+            Number = pageNumber < 0 ? 0 : pageNumber,
             Size = pageSize < 1 ? 6 : pageSize
         };
     }

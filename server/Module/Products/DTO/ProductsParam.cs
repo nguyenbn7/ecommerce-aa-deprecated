@@ -2,16 +2,16 @@ namespace Ecommerce.Module.Products.DTO;
 
 public class ProductsParam
 {
-    private const int MaxPageSize = 50;
-    private const int DefaultPageSize = 10;
+    private const int MaxPageSize = 100;
+    private const int DefaultPageSize = 9;
     private int pageSize = DefaultPageSize;
-    private int pageIndex = 0;
+    private int pageNumber = 1;
     private string? search;
 
-    public int PageIndex
+    public int PageNumber
     {
-        get => pageIndex;
-        set => pageIndex = value < 0 ? 0 : value - 1;
+        get => pageNumber;
+        set => pageNumber = value < 1 ? 1 : value;
     }
 
     public int PageSize

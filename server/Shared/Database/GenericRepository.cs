@@ -6,9 +6,9 @@ namespace Ecommerce.Shared.Database;
 
 public class GenericRepository<TEntity, TKey> : Repository<TEntity, TKey> where TEntity : class
 {
-    private readonly DbContext _context;
+    private readonly AppDbContext _context;
 
-    public GenericRepository(DbContext context)
+    public GenericRepository(AppDbContext context)
     {
         _context = context;
     }
@@ -64,13 +64,13 @@ public class GenericRepository<TEntity, TKey> : Repository<TEntity, TKey> where 
                 return queryAcc.OrderBy(orderable.OrderedProperty);
             });
 
-        query = query.Skip(pageable.Index).Take(pageable.Size);
+        query = query.Skip((pageable.Number - 1) * pageable.Size).Take(pageable.Size);
         var data = await query.ToListAsync();
 
         return new Page<TEntity>
         {
-            PageNumber = pageable.Index + 1,
-            PageSize = data.Count,
+            PageNumber = pageable.Number,
+            PageSize = pageable.Size,
             TotalItems = totalItems,
             Data = data
         };

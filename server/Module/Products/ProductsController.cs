@@ -70,11 +70,11 @@ public class ProductsController : APIController
         var pageProduct = await _productRepository.GetAllAsync(includedProperties,
                                                                predicates,
                                                                orderedProperties,
-                                                               Pageable.Of(@params.PageIndex, @params.PageSize));
+                                                               Pageable.Of(@params.PageNumber, @params.PageSize));
 
         return new Page<ProductReponse>
         {
-            PageNumber = pageProduct.PageNumber + 1,
+            PageNumber = pageProduct.PageNumber,
             PageSize = pageProduct.PageSize,
             TotalItems = pageProduct.TotalItems,
             Data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductReponse>>(pageProduct.Data)
