@@ -1,6 +1,6 @@
 using System.Net.Mime;
 using System.Text.Json;
-using Ecommerce.Shared.Model;
+using Ecommerce.Shared.Model.Response;
 
 namespace Ecommerce.Core.Middleware;
 
@@ -22,7 +22,7 @@ public class RouteNotFoundHandler : IMiddleware
             if (string.IsNullOrEmpty(responseBody))
             {
                 context.Response.ContentType = MediaTypeNames.Application.Json;
-                var response = new ErrorResponse(500, "Unknown error");
+                var response = new ApiError(500, "Unknown error");
 
                 if (context.Response.StatusCode == StatusCodes.Status404NotFound)
                 {
@@ -30,7 +30,7 @@ public class RouteNotFoundHandler : IMiddleware
                 }
                 if (context.Response.StatusCode == StatusCodes.Status401Unauthorized)
                 {
-                    response.Message = ErrorResponse.GetDefaultMessage(401);
+                    response.Message = BaseError.GetDefaultMessage(401);
                 }
 
                 var json = JsonSerializer.Serialize(response);

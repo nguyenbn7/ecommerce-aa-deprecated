@@ -12,6 +12,7 @@ using Ecommerce.Shared.Model;
 using Ecommerce.Core.Database;
 using Ecommerce.Shared.Database;
 using Ecommerce.Module.Accounts.Model;
+using Ecommerce.Shared.Model.Response;
 
 namespace Ecommerce.Core.Extension;
 
@@ -178,10 +179,7 @@ public static class ServiceCollectionExtension
                     .Select(x => x.ErrorMessage)
                     .ToArray();
 
-                var errorResponse = new ValidationErrorResponse
-                {
-                    Errors = errors
-                };
+                var errorResponse = new ValidationError(400, errors);
 
                 return new BadRequestObjectResult(errorResponse);
             };

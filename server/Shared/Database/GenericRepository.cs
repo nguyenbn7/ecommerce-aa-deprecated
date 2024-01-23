@@ -1,132 +1,78 @@
-using Ecommerce.Shared.Database.Criteria;
-using Ecommerce.Shared.Model;
+using Ecommerce.Shared.Database.Specification;
+using Ecommerce.Shared.Model.Pagination;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Shared.Database;
 
 public class GenericRepository<TEntity, TKey> : Repository<TEntity, TKey> where TEntity : class
 {
-    private readonly DbContext dbContext;
+    private readonly DbContext _context;
 
-    public GenericRepository(DbContext dbContext)
+    public GenericRepository(DbContext context)
     {
-        this.dbContext = dbContext;
+        _context = context;
     }
 
-    public async Task<IReadOnlyList<TEntity>> GetAllAsync(
-        IEnumerable<IIncludeSpecification<TEntity>>? includes = null,
-        IPredicateSpecification<TEntity>? specification = null,
-        IEnumerable<Sort<TEntity>>? sorts = null
-    )
+    public Task<TEntity?> GetFirstOrDefaultAsync(Specificational<TEntity> predicates)
     {
-        var query = dbContext.Set<TEntity>().AsNoTracking().AsQueryable();
-        var predicate = specification?.ToPredicate(new PredicateBuilder<TEntity>());
+        var query = _context.Set<TEntity>().AsNoTracking().AsQueryable();
 
-        if (includes != null)
-        {
-            foreach (var includeExpression in includes)
-            {
-                query = query.Include(includeExpression.IncludeProperty());
-            }
-        }
+        if (predicates != null)
+            query = query.Where(predicates.IsSatisfiedBy());
 
-        if (predicate != null)
-        {
-            query = query.Where(predicate);
-        }
-
-        if (sorts != null)
-        {
-            foreach (var sort in sorts)
-            {
-                if (sort.Direction == SortDirection.ASC)
-                    query = query.OrderBy(sort.SortExpression);
-                else query = query.OrderByDescending(sort.SortExpression);
-            }
-        }
-
-        return await query.ToListAsync();
+        return query.FirstOrDefaultAsync();
     }
 
-    public async Task<Page<TEntity>> GetAllAsync(
-        Pageable pageable,
-        Specification<TEntity>? specification = null,
-        IEnumerable<IIncludeSpecification<TEntity>>? includes = null,
-        IEnumerable<Sort<TEntity>>? sorts = null
-    )
+    public Task<TEntity?> GetFirstOrDefaultAsync(IEnumerable<Includable<TEntity>> properties,
+                                                 Specificational<TEntity> predicates)
     {
-        var query = dbContext.Set<TEntity>().AsNoTracking().AsQueryable();
+        var query = _context.Set<TEntity>().AsNoTracking().AsQueryable();
 
-        if (includes != null)
-        {
-            foreach (var includeExpression in includes)
-            {
-                query = query.Include(includeExpression.IncludeProperty());
-            }
-        }
+        if (properties != null)
+            query = properties.Aggregate(query, (queryAcc, includable) => queryAcc.Include(includable.IncludedProperty));
 
-        if (specification != null)
-        {
-            query = query.Where(specification.IsSatisfiedBy());
-        }
+        if (predicates != null)
+            query = query.Where(predicates.IsSatisfiedBy());
+
+        return query.FirstOrDefaultAsync();
+    }
+
+    public Task<List<TEntity>> GetAllAsync() => _context.Set<TEntity>().AsNoTracking().AsQueryable().ToListAsync();
+
+    public async Task<Page<TEntity>> GetAllAsync(List<Includable<TEntity>> includedProperties,
+                                           Specificational<TEntity> predicates,
+                                           List<Orderable<TEntity>> orderedProperties,
+                                           Pageable pageable)
+    {
+        var query = _context.Set<TEntity>().AsNoTracking().AsQueryable();
+
+        if (includedProperties != null)
+            query = includedProperties.Aggregate(query,
+                                                 (queryAcc, includable) => queryAcc.Include(includable.IncludedProperty));
+
+        if (predicates != null)
+            query = query.Where(predicates.IsSatisfiedBy());
 
         var totalItems = await query.CountAsync();
 
-        if (sorts != null)
-        {
-            foreach (var sort in sorts)
+        if (orderedProperties != null)
+            query = orderedProperties.Aggregate(query, (queryAcc, orderable) =>
             {
-                if (sort.Direction == SortDirection.ASC)
-                    query = query.OrderBy(sort.SortExpression);
-                else query = query.OrderByDescending(sort.SortExpression);
-            }
-        }
+                if (orderable.OrderDirection == OrderDirection.DESC)
+                    return queryAcc.OrderByDescending(orderable.OrderedProperty);
+
+                return queryAcc.OrderBy(orderable.OrderedProperty);
+            });
 
         query = query.Skip(pageable.Index).Take(pageable.Size);
         var data = await query.ToListAsync();
 
         return new Page<TEntity>
         {
-            PageIndex = pageable.Index,
+            PageNumber = pageable.Index + 1,
             PageSize = data.Count,
             TotalItems = totalItems,
             Data = data
         };
-    }
-
-    public async Task<TEntity?> GetOneAsync(
-        IEnumerable<IIncludeSpecification<TEntity>>? includes = null,
-        IPredicateSpecification<TEntity>? specification = null,
-        IEnumerable<Sort<TEntity>>? sorts = null
-    )
-    {
-        var query = dbContext.Set<TEntity>().AsNoTracking().AsQueryable();
-
-        if (includes != null)
-        {
-            foreach (var includeExpression in includes)
-            {
-                query = query.Include(includeExpression.IncludeProperty());
-            }
-        }
-
-        if (sorts != null)
-        {
-            foreach (var sort in sorts)
-            {
-                if (sort.Direction == SortDirection.ASC)
-                    query = query.OrderBy(sort.SortExpression);
-                else query = query.OrderByDescending(sort.SortExpression);
-            }
-        }
-
-        var predicate = specification?.ToPredicate(new PredicateBuilder<TEntity>());
-
-        if (predicate != null)
-        {
-            return await query.FirstOrDefaultAsync(predicate);
-        }
-
-        return await query.FirstOrDefaultAsync();
     }
 }

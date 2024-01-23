@@ -5,6 +5,7 @@ using Ecommerce.Module.Accounts.Model;
 using Ecommerce.Module.Accounts.Model.Response;
 using Ecommerce.Shared;
 using Ecommerce.Shared.Model;
+using Ecommerce.Shared.Model.Response;
 using Ecommerce.Shared.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -39,7 +40,7 @@ public class AccountController : APIController
     {
         var email = HttpContext.User.FindFirstValue(ClaimTypes.Email);
         if (email == null)
-            return BadRequest(new ErrorResponse(400));
+            return BadRequest(new ApiError(400));
 
         var user = await _userManager.FindByEmailAsync(email);
 
@@ -63,7 +64,7 @@ public class AccountController : APIController
     {
         var email = HttpContext.User.FindFirstValue(ClaimTypes.Email)?.ToUpper();
         if (email == null)
-            return Unauthorized(new ErrorResponse(401));
+            return Unauthorized(new ApiError(401));
 
         var user = await _userManager.Users.AsNoTracking()
             .Include(u => u.Address).SingleOrDefaultAsync(u => u.NormalizedEmail == email);
@@ -77,7 +78,7 @@ public class AccountController : APIController
     {
         var email = HttpContext.User.FindFirstValue(ClaimTypes.Email)?.ToUpper();
         if (email == null)
-            return Unauthorized(new ErrorResponse(401));
+            return Unauthorized(new ApiError(401));
 
         var user = await _userManager.Users.Include(u => u.Address)
             .SingleOrDefaultAsync(u => u.NormalizedEmail == email);
@@ -88,13 +89,13 @@ public class AccountController : APIController
 
         if (result.Succeeded) return _mapper.Map<Address, CustomerAddress>(user!.Address!);
 
-        return BadRequest(new ErrorResponse("Can not update address"));
+        return BadRequest(new ApiError("Can not update address"));
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(CustomerLogin customerLogin)
     {
-        var unauthorizedResponse = new ErrorResponse("Email or Password are not recognized");
+        var unauthorizedResponse = new ApiError("Email or Password are not recognized");
 
         var user = await _userManager.FindByEmailAsync(customerLogin.Email);
         if (user == null)
@@ -118,10 +119,11 @@ public class AccountController : APIController
     {
         if ((await CheckEmailExists(customerRegister.Email)).Value)
         {
-            return BadRequest(new ValidationErrorResponse
-            {
-                Errors = new string[] { "Email address in use" }
-            });
+            return BadRequest(new ValidationError
+            (
+                StatusCodes.Status400BadRequest,
+                new string[] { "Email address in use" }
+            ));
         }
 
         var user = new AppUser
@@ -134,7 +136,7 @@ public class AccountController : APIController
         var result = await _userManager.CreateAsync(user, customerRegister.Password);
 
         if (!result.Succeeded)
-            return BadRequest(new ErrorResponse(400));
+            return BadRequest(new ApiError(400));
 
         return Ok(new CustomerInfoWithToken
         {

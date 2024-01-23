@@ -2,6 +2,7 @@ using System.Net;
 using System.Net.Mime;
 using System.Text.Json;
 using Ecommerce.Shared.Model;
+using Ecommerce.Shared.Model.Response;
 
 namespace Ecommerce.Core.Middleware;
 
@@ -36,8 +37,8 @@ public class ExceptionHandler : IMiddleware
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
         var response = _environment.IsDevelopment()
-            ? new ErrorResponse(ex.Message, ex.StackTrace?.ToString())
-            : new ErrorResponse(context.Response.StatusCode);
+            ? new ApiError(ex.Message, ex.StackTrace?.ToString() ?? string.Empty)
+            : new ApiError(context.Response.StatusCode);
 
         var json = JsonSerializer.Serialize(response);
         await context.Response.WriteAsync(json);

@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Ecommerce.Module.Products.Model;
-using Ecommerce.Shared.Database.Criteria;
+using Ecommerce.Shared.Database.Specification;
 
 namespace Ecommerce.Module.Products.Specification;
 

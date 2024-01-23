@@ -1,5 +1,5 @@
 using Ecommerce.Shared.Database;
-using Ecommerce.Shared.Model;
+using Ecommerce.Shared.Model.Response;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Ecommerce.Testing;
@@ -28,7 +28,7 @@ public class BuggyController : ControllerBase
         var thing = Context.Products.Find(42);
         if (thing == null)
         {
-            return NotFound(new ErrorResponse(StatusCodes.Status404NotFound));
+            return NotFound(new ApiError(StatusCodes.Status404NotFound));
         }
         return Ok();
     }
@@ -46,12 +46,12 @@ public class BuggyController : ControllerBase
     [HttpGet("bad-request")]
     public IActionResult GetBadRequest()
     {
-        return BadRequest(new ErrorResponse(StatusCodes.Status400BadRequest));
+        return BadRequest(new ApiError(StatusCodes.Status400BadRequest));
     }
 
     [HttpGet("bad-request/{id}")]
     public IActionResult GetBadRequest(int id)
     {
-        return BadRequest(new ErrorResponse(id.ToString()));
+        return BadRequest(new ApiError(id.ToString()));
     }
 }

@@ -4,7 +4,10 @@ using Ecommerce.Module.Products.Model;
 using Ecommerce.Module.Products.Specification;
 using Ecommerce.Shared;
 using Ecommerce.Shared.Database;
+using Ecommerce.Shared.Database.Specification;
 using Ecommerce.Shared.Model;
+using Ecommerce.Shared.Model.Pagination;
+using Ecommerce.Shared.Model.Response;
 
 namespace Ecommerce.Module.Products;
 
@@ -14,12 +17,6 @@ public class ProductsController : APIController
     private readonly Repository<ProductType, int> _productTypeRepository;
     private readonly Repository<ProductBrand, int> _productBrandRepository;
     private readonly IMapper _mapper;
-
-    private readonly List<IIncludeSpecification<Product>> includes = new()
-    {
-        new IncludeProductBrand(),
-        new IncludeProductType()
-    };
 
     public ProductsController(
         ILogger<ProductsController> logger,
@@ -38,49 +35,45 @@ public class ProductsController : APIController
     [HttpGet]
     public async Task<ActionResult<Page<ProductReponse>>> GetProducts([FromQuery] ProductsParam @params)
     {
-        var spec = new ProductSpecification();
-
-        if (@params.BrandId.HasValue)
+        var includedProperties = new List<Includable<Product>>()
         {
-            spec.And(new GetProductBrandByBrandId(@params.BrandId.Value));
-        }
+            new(p => p.ProductBrand), new(p => p.ProductType)
+        };
+
+        var predicates = new ProductSpecification() as Specificational<Product>;
+        if (@params.BrandId.HasValue)
+            predicates = predicates.And(new GetProductBrandByBrandId(@params.BrandId.Value));
 
         if (@params.TypeId.HasValue)
-        {
-            spec.And(new GetProductTypeByTypeId(@params.TypeId.Value));
-        }
+            predicates = predicates.And(new GetProductTypeByTypeId(@params.TypeId.Value));
 
         if (@params.Search != null)
-        {
-            spec.And(new GetProductBySearchTerm(@params.Search));
-        }
+            predicates = predicates.And(new GetProductBySearchTerm(@params.Search));
 
-        var sorts = new List<Sort<Product>>();
+        var orderedProperties = new List<Orderable<Product>>();
         if (!string.IsNullOrEmpty(@params.Sort))
-        {
             switch (@params.Sort.ToLower())
             {
                 case "price":
-                    sorts.Add(new(p => p.Price));
+                    orderedProperties.Add(new(p => p.Price));
                     break;
                 case "-price":
-                    sorts.Add(new(p => p.Price, SortDirection.DESC));
+                    orderedProperties.Add(new(p => p.Price, OrderDirection.DESC));
                     break;
                 default:
-                    sorts.Add(new(p => p.Name));
+                    orderedProperties.Add(new(p => p.Name));
                     break;
             }
-        }
         else
-        {
-            sorts.Add(new(p => p.Name));
-        }
+            orderedProperties.Add(new(p => p.Name));
 
-        var pageProduct = await _productRepository.GetAllAsync(Pageable.Of(@params.PageIndex, @params.PageSize), spec, includes, sorts);
+
+        var pageProduct = await _productRepository.GetAllAsync(
+            includedProperties, predicates, orderedProperties, Pageable.Of(@params.PageIndex, @params.PageSize));
 
         return new Page<ProductReponse>
         {
-            PageIndex = pageProduct.PageIndex + 1,
+            PageNumber = pageProduct.PageNumber + 1,
             PageSize = pageProduct.PageSize,
             TotalItems = pageProduct.TotalItems,
             Data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductReponse>>(pageProduct.Data)
@@ -90,10 +83,19 @@ public class ProductsController : APIController
     [HttpGet("{id}")]
     public async Task<ActionResult<ProductReponse>> GetProduct(int id)
     {
-        var spec = new ProductPredicate(id);
-        var product = await _productRepository.GetOneAsync(includes, spec);
+        var includedProperties = new List<Includable<Product>>()
+        {
+            new(p => p.ProductBrand), new(p => p.ProductType)
+        };
+
+        var predicates = new ProductSpecification(id);
+
+        var product = await _productRepository.GetFirstOrDefaultAsync(
+            includedProperties, predicates);
+
         if (product == null)
-            return NotFound(new ErrorResponse("Product does not exist"));
+            return NotFound(new ApiError("Product does not exist"));
+
         return _mapper.Map<Product, ProductReponse>(product);
     }
 

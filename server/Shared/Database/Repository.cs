@@ -1,24 +1,17 @@
-using Ecommerce.Shared.Database.Criteria;
-using Ecommerce.Shared.Model;
+using Ecommerce.Shared.Database.Specification;
+using Ecommerce.Shared.Model.Pagination;
 
 namespace Ecommerce.Shared.Database;
 
 public interface Repository<TEntity, TKey> where TEntity : class
 {
-    Task<IReadOnlyList<TEntity>> GetAllAsync(
-        IEnumerable<IIncludeSpecification<TEntity>>? includes = null,
-        IPredicateSpecification<TEntity>? specification = null,
-        IEnumerable<Sort<TEntity>>? sorts = null
-    );
-    Task<Page<TEntity>> GetAllAsync(
-        Pageable pageable,
-        Specification<TEntity>? specification = null,
-        IEnumerable<IIncludeSpecification<TEntity>>? includes = null,
-        IEnumerable<Sort<TEntity>>? sorts = null
-    );
-    Task<TEntity?> GetOneAsync(
-        IEnumerable<IIncludeSpecification<TEntity>>? includes = null,
-        IPredicateSpecification<TEntity>? specification = null,
-        IEnumerable<Sort<TEntity>>? sorts = null
-    );
+    Task<TEntity?> GetFirstOrDefaultAsync(Specificational<TEntity> predicates);
+    Task<TEntity?> GetFirstOrDefaultAsync(IEnumerable<Includable<TEntity>> properties,
+                                          Specificational<TEntity> predicates);
+
+    Task<List<TEntity>> GetAllAsync();
+    Task<Page<TEntity>> GetAllAsync(List<Includable<TEntity>> includedProperties,
+                                    Specificational<TEntity> predicates,
+                                    List<Orderable<TEntity>> orderedProperties,
+                                    Pageable pageable);
 }

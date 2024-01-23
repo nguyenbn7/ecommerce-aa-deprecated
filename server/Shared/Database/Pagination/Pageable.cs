@@ -1,4 +1,4 @@
-namespace Ecommerce.Shared.Model;
+namespace Ecommerce.Shared.Model.Pagination;
 
 public class Pageable
 {
