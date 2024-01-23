@@ -12,6 +12,7 @@ public sealed class SqliteAppDbContext : AppDbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseSqlite(Configuration.GetConnectionString("SqliteConn"));
     }
 

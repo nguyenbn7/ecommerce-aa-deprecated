@@ -19,6 +19,17 @@ public abstract class AppDbContext : IdentityDbContext<AppUser, AppRole, string,
     public required DbSet<ProductBrand> ProductBrands { get; set; }
     public required DbSet<ProductType> ProductTypes { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder =>
+        {
+            builder.AddConsole();
+        }));
+#if DEBUG
+        optionsBuilder.EnableSensitiveDataLogging();
+#endif
+    }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

@@ -11,6 +11,7 @@ public sealed class PostgreSqlAppDbContext : AppDbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        base.OnConfiguring(optionsBuilder);
         optionsBuilder.UseNpgsql(Configuration.GetConnectionString("PostgreConn"));
     }
 
