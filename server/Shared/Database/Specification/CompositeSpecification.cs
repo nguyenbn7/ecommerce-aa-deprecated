@@ -16,7 +16,8 @@ public abstract class CompositeSpecification<TEntity> : Specificational<TEntity>
         private readonly Specificational<TEntity> leftCondition;
         private readonly Specificational<TEntity> rightCondition;
 
-        public AndExpression(Specificational<TEntity> left, Specificational<TEntity> right)
+        public AndExpression(Specificational<TEntity> left,
+                             Specificational<TEntity> right)
         {
             leftCondition = left;
             rightCondition = right;
@@ -39,7 +40,8 @@ public abstract class CompositeSpecification<TEntity> : Specificational<TEntity>
         private readonly Specificational<TEntity> leftCondition;
         private readonly Specificational<TEntity> rightCondition;
 
-        public OrExpression(Specificational<TEntity> left, Specificational<TEntity> right)
+        public OrExpression(Specificational<TEntity> left,
+                            Specificational<TEntity> right)
         {
             leftCondition = left;
             rightCondition = right;

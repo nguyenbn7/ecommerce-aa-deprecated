@@ -11,7 +11,8 @@ public class ApiError : BaseError
     {
     }
 
-    public ApiError(int statusCode, string details) : base(statusCode)
+    public ApiError(int statusCode,
+                    string details) : base(statusCode)
     {
         Details = details;
     }
@@ -20,7 +21,8 @@ public class ApiError : BaseError
     {
     }
 
-    public ApiError(string message, string details) : base(message)
+    public ApiError(string message,
+                    string details) : base(message)
     {
         Details = details;
     }

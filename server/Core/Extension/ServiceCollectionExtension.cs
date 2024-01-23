@@ -18,7 +18,8 @@ namespace Ecommerce.Core.Extension;
 
 public static class ServiceCollectionExtension
 {
-    public static IServiceCollection AddAppDbContext(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddAppDbContext(this IServiceCollection services,
+                                                     IConfiguration configuration)
     {
         return configuration.GetValue<string>("DatabaseProvider") switch
         {
@@ -39,7 +40,8 @@ public static class ServiceCollectionExtension
         return services;
     }
 
-    public static IServiceCollection AddRedis(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddRedis(this IServiceCollection services,
+                                              IConfiguration configuration)
     {
         services.AddSingleton<IConnectionMultiplexer>(_ =>
         {
@@ -90,7 +92,9 @@ public static class ServiceCollectionExtension
         return services;
     }
 
-    public static IServiceCollection UseIdentity(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+    public static IServiceCollection UseIdentity(this IServiceCollection services,
+                                                 IConfiguration configuration,
+                                                 IWebHostEnvironment env)
     {
         services.AddAuthentication();
 
@@ -128,14 +132,16 @@ public static class ServiceCollectionExtension
             var userSettingsConfig = configuration.GetSection("Identity:Options:User");
 
             // User settings.
-            options.User.AllowedUserNameCharacters = userSettingsConfig.GetValue<string>("AllowedUserNameCharacters") ?? options.User.AllowedUserNameCharacters;
+            options.User.AllowedUserNameCharacters = userSettingsConfig.GetValue<string>("AllowedUserNameCharacters")
+                                                     ?? options.User.AllowedUserNameCharacters;
             options.User.RequireUniqueEmail = userSettingsConfig.GetValue<bool>("RequireUniqueEmail");
         });
 
         return services;
     }
 
-    public static IServiceCollection UseJWTForAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection UseJWTForAuthentication(this IServiceCollection services,
+                                                             IConfiguration configuration)
     {
         var tokenSettingsConfig = configuration.GetSection("Token");
 

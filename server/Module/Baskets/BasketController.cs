@@ -10,10 +10,9 @@ public class BasketController : APIController
     private readonly IBasketRepository _basketRepository;
     private readonly IMapper _mapper;
 
-    public BasketController(
-        ILogger<BasketController> logger, 
-        IBasketRepository basketRepository, 
-        IMapper mapper)
+    public BasketController(ILogger<BasketController> logger,
+                            IBasketRepository basketRepository,
+                            IMapper mapper)
         : base(logger)
     {
         _basketRepository = basketRepository;

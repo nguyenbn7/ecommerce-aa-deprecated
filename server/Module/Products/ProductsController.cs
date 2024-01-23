@@ -18,12 +18,11 @@ public class ProductsController : APIController
     private readonly Repository<ProductBrand, int> _productBrandRepository;
     private readonly IMapper _mapper;
 
-    public ProductsController(
-        ILogger<ProductsController> logger,
-        Repository<Product, int> productRepository,
-        Repository<ProductType, int> productTypeRepository,
-        Repository<ProductBrand, int> productBrandRepository,
-        IMapper mapper)
+    public ProductsController(ILogger<ProductsController> logger,
+                              Repository<Product, int> productRepository,
+                              Repository<ProductType, int> productTypeRepository,
+                              Repository<ProductBrand, int> productBrandRepository,
+                              IMapper mapper)
         : base(logger)
     {
         _productRepository = productRepository;
@@ -68,8 +67,10 @@ public class ProductsController : APIController
             orderedProperties.Add(new(p => p.Name));
 
 
-        var pageProduct = await _productRepository.GetAllAsync(
-            includedProperties, predicates, orderedProperties, Pageable.Of(@params.PageIndex, @params.PageSize));
+        var pageProduct = await _productRepository.GetAllAsync(includedProperties,
+                                                               predicates,
+                                                               orderedProperties,
+                                                               Pageable.Of(@params.PageIndex, @params.PageSize));
 
         return new Page<ProductReponse>
         {
@@ -90,8 +91,8 @@ public class ProductsController : APIController
 
         var predicates = new ProductSpecification(id);
 
-        var product = await _productRepository.GetFirstOrDefaultAsync(
-            includedProperties, predicates);
+        var product = await _productRepository.GetFirstOrDefaultAsync(includedProperties,
+                                                                      predicates);
 
         if (product == null)
             return NotFound(new ApiError("Product does not exist"));

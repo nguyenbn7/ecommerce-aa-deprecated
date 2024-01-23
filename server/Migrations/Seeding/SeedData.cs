@@ -9,7 +9,8 @@ namespace Ecommerce.Migrations.Seeding;
 
 public class DataSeed
 {
-    public static async Task SeedProductBrandsAsync(AppDbContext context, ILogger logger)
+    public static async Task SeedProductBrandsAsync(AppDbContext context,
+                                                    ILogger logger)
     {
         if (await context.ProductBrands.AnyAsync()) return;
 
@@ -25,7 +26,8 @@ public class DataSeed
         await context.SaveChangesAsync();
     }
 
-    public static async Task SeedProductTypesAsync(AppDbContext context, ILogger logger)
+    public static async Task SeedProductTypesAsync(AppDbContext context,
+                                                   ILogger logger)
     {
         if (await context.ProductTypes.AnyAsync()) return;
 
@@ -41,7 +43,8 @@ public class DataSeed
         await context.SaveChangesAsync();
     }
 
-    public static async Task SeedProductsAsync(AppDbContext context, ILogger logger)
+    public static async Task SeedProductsAsync(AppDbContext context,
+                                               ILogger logger)
     {
         if (await context.Products.AnyAsync()) return;
 

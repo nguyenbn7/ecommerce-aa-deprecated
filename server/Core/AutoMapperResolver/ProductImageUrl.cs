@@ -13,7 +13,10 @@ public class ProductImageUrl : IValueResolver<Product, ProductReponse, string?>
         _configuration = configuration;
     }
 
-    public string? Resolve(Product source, ProductReponse destination, string? destMember, ResolutionContext context)
+    public string? Resolve(Product source,
+                           ProductReponse destination,
+                           string? destMember,
+                           ResolutionContext context)
     {
         if (!string.IsNullOrEmpty(source.PictureUrl))
         {

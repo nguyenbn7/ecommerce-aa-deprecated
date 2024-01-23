@@ -4,7 +4,6 @@ using Ecommerce.Module.Accounts.DTO;
 using Ecommerce.Module.Accounts.Model;
 using Ecommerce.Module.Accounts.Model.Response;
 using Ecommerce.Shared;
-using Ecommerce.Shared.Model;
 using Ecommerce.Shared.Model.Response;
 using Ecommerce.Shared.Service;
 using Microsoft.AspNetCore.Authorization;
@@ -20,12 +19,11 @@ public class AccountController : APIController
     private readonly AuthenticationService _authenticationTokenService;
     private readonly IMapper _mapper;
 
-    public AccountController(
-        ILogger<AccountController> logger,
-        UserManager<AppUser> userManager,
-        SignInManager<AppUser> signInManager,
-        AuthenticationService authenticationTokenService,
-        IMapper mapper)
+    public AccountController(ILogger<AccountController> logger,
+                             UserManager<AppUser> userManager,
+                             SignInManager<AppUser> signInManager,
+                             AuthenticationService authenticationTokenService,
+                             IMapper mapper)
         : base(logger)
     {
         _mapper = mapper;
