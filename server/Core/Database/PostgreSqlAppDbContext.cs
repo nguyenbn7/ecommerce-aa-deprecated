@@ -1,3 +1,4 @@
+using System.Reflection;
 using Ecommerce.Shared.Database;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,5 +19,7 @@ public sealed class PostgreSqlAppDbContext : AppDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(),
+                                                t => t.Name.Contains("PostgreConfig") || t.Name.Contains("SharedConfig"));
     }
 }

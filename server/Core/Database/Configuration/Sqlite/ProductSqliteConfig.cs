@@ -2,9 +2,9 @@ using Ecommerce.Module.Products.Model;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Ecommerce.Module.Products;
+namespace Ecommerce.Core.Database.Configuration.Sqlite;
 
-public class ProductSqliteDbContextConfiguration : IEntityTypeConfiguration<Product>
+public class ProductSqliteConfig : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {

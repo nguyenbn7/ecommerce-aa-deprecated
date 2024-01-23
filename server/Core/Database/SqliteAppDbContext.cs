@@ -19,6 +19,7 @@ public sealed class SqliteAppDbContext : AppDbContext
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly(),
+                                                t => t.Name.Contains("SqliteConfig") || t.Name.Contains("SharedConfig"));
     }
 }

@@ -15,6 +15,8 @@ public class ProductItemOrdered
         PictureUrl = pictureUrl;
     }
 
+    public int Id { get; set; }
+
     public int ProductItemId { get; set; }
     public required string ProductName { get; set; }
     public required string PictureUrl { get; set; }
