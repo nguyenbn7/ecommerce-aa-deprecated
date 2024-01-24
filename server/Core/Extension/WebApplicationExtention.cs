@@ -59,6 +59,7 @@ public static class WebApplicationExtentions
             await DataSeed.SeedProductBrandsAsync(context, logger);
             await DataSeed.SeedProductTypesAsync(context, logger);
             await DataSeed.SeedProductsAsync(context, logger);
+            await DataSeed.SeedDeliveryMethodsAsync(context, logger);
             await DataSeed.SeedUsersAsync(userManager);
         }
         catch (Exception ex)

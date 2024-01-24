@@ -1,4 +1,5 @@
 using Ecommerce.Module.Accounts.Model;
+using Ecommerce.Module.Orders.Model;
 using Ecommerce.Module.Products.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -18,6 +19,9 @@ public abstract class AppDbContext : IdentityDbContext<AppUser, AppRole, string,
     public required DbSet<Product> Products { get; set; }
     public required DbSet<ProductBrand> ProductBrands { get; set; }
     public required DbSet<ProductType> ProductTypes { get; set; }
+    public required DbSet<Order> Orders { get; set; }
+    public required DbSet<OrderItem> OrderItems { get; set; }
+    public required DbSet<DeliveryMethod> DeliveryMethods { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Ecommerce.Module.Accounts.Model;
+using Ecommerce.Module.Orders.Model;
 using Ecommerce.Module.Products.Model;
 using Ecommerce.Shared.Database;
 using Microsoft.AspNetCore.Identity;
@@ -60,6 +61,23 @@ public class DataSeed
         await context.SaveChangesAsync();
     }
 
+    public static async Task SeedDeliveryMethodsAsync(AppDbContext context,
+                                               ILogger logger)
+    {
+        if (await context.DeliveryMethods.AnyAsync()) return;
+
+        var deliveryMethodsData = await File.ReadAllTextAsync("Data/delivery.json");
+        var deliveryMethods = JsonSerializer.Deserialize<List<DeliveryMethod>>(deliveryMethodsData);
+        if (deliveryMethods == null)
+        {
+            logger.LogError("Can not get seed data: Delivery Method");
+            return;
+        }
+
+        context.DeliveryMethods.AddRange(deliveryMethods);
+        await context.SaveChangesAsync();
+    }
+
     public static async Task SeedUsersAsync(UserManager<AppUser> userManager)
     {
         if (userManager.Users.Any())
@@ -70,7 +88,7 @@ public class DataSeed
             DisplayName = "Bob",
             Email = "bob@test.com",
             UserName = "bob@test.com",
-            Address = new Address
+            Address = new Module.Accounts.Model.Address
             {
                 FirstName = "Bob",
                 LastName = "Bobbity",
