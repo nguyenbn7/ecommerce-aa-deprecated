@@ -5,6 +5,7 @@ namespace Ecommerce.Shared.Database;
 
 public interface Repository<TEntity, TKey> where TEntity : class
 {
+    Task<TEntity?> GetByIdAsync(TKey id);
     Task<TEntity?> GetFirstOrDefaultAsync(Specificational<TEntity> predicates);
     Task<TEntity?> GetFirstOrDefaultAsync(IEnumerable<Includable<TEntity>> properties,
                                           Specificational<TEntity> predicates);

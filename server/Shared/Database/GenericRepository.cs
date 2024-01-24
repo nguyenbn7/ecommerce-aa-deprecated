@@ -1,3 +1,5 @@
+using System.Linq.Expressions;
+using System.Reflection;
 using Ecommerce.Shared.Database.Specification;
 using Ecommerce.Shared.Model.Pagination;
 using Microsoft.EntityFrameworkCore;
@@ -74,5 +76,27 @@ public class GenericRepository<TEntity, TKey> : Repository<TEntity, TKey> where 
             TotalItems = totalItems,
             Data = data
         };
+    }
+
+    public Task<TEntity?> GetByIdAsync(TKey id)
+    {
+        var query = _context.Set<TEntity>().AsNoTracking().AsQueryable();
+        return query.FirstOrDefaultAsync(FindByIdLambdaExpression(GetEntityPrimaryKey(), id));
+    }
+
+    private Expression<Func<TEntity, bool>> FindByIdLambdaExpression(PropertyInfo primaryKey, TKey id)
+    {
+        var parameter = Expression.Parameter(typeof(TEntity));
+        var left = Expression.Property(parameter, primaryKey);
+        var right = Expression.Constant(id, typeof(TKey));
+        var body = Expression.Equal(left, right);
+        return Expression.Lambda<Func<TEntity, bool>>(body, parameter);
+    }
+
+    private PropertyInfo GetEntityPrimaryKey()
+    {
+        return _context.Model.FindEntityType(typeof(TEntity))?.FindPrimaryKey()?.Properties
+            .Select(x => x.PropertyInfo)
+            .Single() ?? throw new Exception("Primary key not found");
     }
 }

@@ -13,6 +13,7 @@ using Ecommerce.Core.Database;
 using Ecommerce.Shared.Database;
 using Ecommerce.Module.Accounts.Model;
 using Ecommerce.Shared.Model.Response;
+using Ecommerce.Module.Orders;
 
 namespace Ecommerce.Core.Extension;
 
@@ -33,6 +34,7 @@ public static class ServiceCollectionExtension
         services.AddScoped(typeof(Repository<,>), typeof(GenericRepository<,>));
         services.AddScoped<IBasketRepository, BasketRepository>();
         services.AddScoped<AuthenticationService, JWTAuthenticationService>();
+        services.AddScoped<OrderService, CompositeOrderService>();
 
         services.AddTransient<ExceptionHandler>();
         services.AddTransient<RouteNotFoundHandler>();
